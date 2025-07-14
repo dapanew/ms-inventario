@@ -1,0 +1,325 @@
+{
+	"info": {
+		"_postman_id": "4a8070e5-018c-4cb7-a1d6-13fe3140eba9",
+		"name": "MS Inventario - Pruebas",
+		"description": "Colección para probar el microservicio de gestión de inventarios.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42992711"
+	},
+	"item": [
+		{
+			"name": "Configuración",
+			"item": [
+				{
+					"name": "Set Variables",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"base_url\", \"http://localhost:8080/api/inventarios\")",
+									"pm.collectionVariables.set(\"api_key\", \"API-KEY-SECRET\")",
+									"pm.collectionVariables.set(\"producto_existente\", 1)",
+									"pm.collectionVariables.set(\"producto_inexistente\", 999)",
+									"pm.collectionVariables.set(\"producto_nuevo\", 100)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}",
+							"host": [
+								"{{base_url}}"
+							]
+						},
+						"description": "url principal del microservicio"
+					},
+					"response": []
+				}
+			],
+			"description": "este modulo de configuracion estan las variables que se utilian en la collection para hacer pruebas ejemplo:\n\nurl raiz :[http://localhost:8082/api/inventarios](http://localhost:8082/api/inventarios)"
+		},
+		{
+			"name": "Consultar Inventario",
+			"item": [
+				{
+					"name": "Consultar inventario - Producto existente",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{api_key}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/{{producto_existente}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{producto_existente}}"
+							]
+						},
+						"description": "Esta operacion de tipo GET se utiliza para consultar por el idProducto, el cual debe existir en la tabla de la base de datos de productos para que traiga la informacion del producto y su inventario"
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar inventario - Producto inexistente",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{api_key}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/{{producto_inexistente}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{producto_inexistente}}"
+							]
+						},
+						"description": "Esta operacion de tipo Get consulta, es una VALIDACION que se realiza cuando el producto que se consulta No existe en la base de datos."
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar inventario - ID inválido (0)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{api_key}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"0"
+							]
+						},
+						"description": "Esta operacion de tipo Get consulta, es una VALIDACION que se realiza cuando se pasa un valor invalido."
+					},
+					"response": []
+				}
+			],
+			"description": "Este modulo tiene las pruebas tipo consulta GET del inventario. por idproducto ejemplo: 1"
+		},
+		{
+			"name": "Actualizar Inventario",
+			"item": [
+				{
+					"name": "Actualizar inventario - Producto existente",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cantidad\": 50\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{producto_existente}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{producto_existente}}"
+							]
+						},
+						"description": "Esta operacion de tipo PUT se utiliza para actualizar la cantidad del idProducto, el cual debe existir en la tabla de la base de datos de productos."
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar inventario - Nuevo producto a crear en inventario",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cantidad\": 100\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{producto_nuevo}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{producto_nuevo}}"
+							]
+						},
+						"description": "Esta operacion de tipo PUT se utiliza para Ingresar un registro en la tabla de inventarios con la cantidad, en los casos cuando el idproducto existe en la tabla de productos."
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar inventario - Cantidad negativa",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cantidad\": -10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{producto_existente}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{producto_existente}}"
+							]
+						},
+						"description": "Esta operacion de tipo PUT - actualizar, es una VALIDACION para que arroje un mensaje de error cuando la cantidad sea negativa."
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar inventario - Producto inexistente",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cantidad\": 30\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{producto_inexistente}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{producto_inexistente}}"
+							]
+						},
+						"description": "Esta operacion de tipo PUT -actualizar, es una VALIDACION para cuando el idproducto no Existe en la tabla de productos"
+					},
+					"response": []
+				}
+			],
+			"description": "Este modulo tiene las pruebas tipo ACTUALIZAR (PUT) del inventario. por idproducto ejemplo: 1"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"console.log('Setting up test environment');"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"",
+					"// Tests para consultar inventario exitoso",
+					"pm.test(\"Status code is 200\", function () {",
+					"    if (pm.response.code === 200) {",
+					"        pm.response.to.have.status(200);",
+					"        pm.expect(pm.response.json()).to.have.property('id');",
+					"        pm.expect(pm.response.json()).to.have.property('productoId');",
+					"        pm.expect(pm.response.json()).to.have.property('cantidad');",
+					"        pm.expect(pm.response.json()).to.have.property('fechaActualizacion');",
+					"        pm.expect(pm.response.json()).to.have.property('producto');",
+					"    }",
+					"});",
+					"",
+					"// Tests para respuestas fallidas",
+					"pm.test(\"For invalid requests\", function () {",
+					"    if (pm.response.code !== 200) {",
+					"        pm.expect(pm.response.code).to.be.oneOf([400, 401, 404, 500]);",
+					"        const jsonData = pm.response.json();",
+					"        if (jsonData) {",
+					"            pm.expect(jsonData).to.have.property('message');",
+					"            pm.expect(jsonData).to.have.property('timestamp');",
+					"        }",
+					"    }",
+					"});",
+					"",
+					"// Tests específicos para actualización exitosa",
+					"pm.test(\"For successful inventory updates\", function () {",
+					"    if (pm.response.code === 200 && pm.request.method === 'PUT') {",
+					"        const response = pm.response.json();",
+					"        pm.expect(response.cantidad).to.eql(JSON.parse(pm.request.body.toString()).cantidad);",
+					"    }",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/api/inventarios"
+		},
+		{
+			"key": "api_key",
+			"value": "API-KEY-SECRET"
+		},
+		{
+			"key": "producto_existente",
+			"value": "1"
+		},
+		{
+			"key": "producto_inexistente",
+			"value": "999"
+		},
+		{
+			"key": "producto_nuevo",
+			"value": "100"
+		}
+	]
+}
